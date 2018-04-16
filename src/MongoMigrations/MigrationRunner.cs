@@ -27,12 +27,14 @@ namespace MongoMigrations
         {
             Database = database;
             DatabaseStatus = new DatabaseMigrationStatus(this);
+            DatabaseSession = new DatabaseMigrationSession(this);
             MigrationLocator = new MigrationLocator();
         }
 
         public IMongoDatabase Database { get; set; }
         public MigrationLocator MigrationLocator { get; set; }
         public DatabaseMigrationStatus DatabaseStatus { get; set; }
+        public DatabaseMigrationSession DatabaseSession { get; private set; }
 
         public virtual void UpdateToLatest()
         {
@@ -52,8 +54,18 @@ namespace MongoMigrations
 
         protected virtual void ApplyMigrations(IEnumerable<Migration> migrations)
         {
-            migrations.ToList()
-                      .ForEach(ApplyMigration);
+            MigrationSession migrationSession = DatabaseSession.StartMigrationSession(migrations);
+            try
+            {
+                migrations.ToList()
+                          .ForEach(ApplyMigration);
+                DatabaseSession.CompleteMigrationSession(migrationSession, null, true);
+            }
+            catch (MigrationException migrationException)
+            {
+                DatabaseSession.CompleteMigrationSession(migrationSession, migrationException.VersionFailedOn, false);
+                throw migrationException;
+            }
         }
 
         protected virtual void ApplyMigration(Migration migration)
@@ -86,7 +98,7 @@ namespace MongoMigrations
             Console.WriteLine(message);
             migration.Rollback();
             DatabaseStatus.DeleteMigration(new AppliedMigration(migration));
-            throw new MigrationException(message.ToString(), exception);
+            throw new MigrationException(message.ToString(), exception, migration.Version);
         }
 
         public virtual void UpdateTo(MigrationVersion updateToVersion)

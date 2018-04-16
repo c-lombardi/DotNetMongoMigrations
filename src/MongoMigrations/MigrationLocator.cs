@@ -49,7 +49,7 @@
             }
             catch (Exception exception)
             {
-                throw new MigrationException("Cannot load migrations from assembly: " + assembly.FullName, exception);
+                throw new MigrationException("Cannot load migrations from assembly: " + assembly.FullName, exception, null);
             }
         }
 

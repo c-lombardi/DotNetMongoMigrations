@@ -4,8 +4,10 @@
 
     public class MigrationException : ApplicationException
     {
-        public MigrationException(string message, Exception innerException) : base(message, innerException)
+        public MigrationVersion? VersionFailedOn { get; private set; }
+        public MigrationException(string message, Exception innerException, MigrationVersion? versionFailedOn) : base(message, innerException)
         {
+            VersionFailedOn = versionFailedOn;
         }
     }
 }

@@ -70,7 +70,7 @@ namespace MongoMigrations
                     MigrationVersion = Version,
                     MigrationDescription = Description
                 };
-            throw new MigrationException(message.ToString(), exception);
+            throw new MigrationException(message.ToString(), exception, Version);
         }
 
         protected virtual void OnErrorRollingBackDocument(BsonDocument document, Exception exception)
@@ -84,7 +84,7 @@ namespace MongoMigrations
                     MigrationVersion = Version,
                     MigrationDescription = Description
                 };
-            throw new MigrationException(message.ToString(), exception);
+            throw new MigrationException(message.ToString(), exception, Version);
         }
 
         public abstract void UpdateDocument(IMongoCollection<BsonDocument> collection, BsonDocument document);
