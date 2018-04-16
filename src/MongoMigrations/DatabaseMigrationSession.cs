@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MongoMigrations
 {
@@ -20,17 +21,27 @@ namespace MongoMigrations
             return _Runner.Database.GetCollection<MigrationSession>(VersionCollectionName);
         }
 
-        public virtual void CompleteMigrationSession(MigrationSession migrationSession, MigrationVersion? completedOnVersion, bool successful)
+        public virtual bool MigrationSessionIsExecuting()
+        {
+            return GetMigrationSessions()
+                .Find(Builders<MigrationSession>.Filter.Empty)
+                .ToList()
+                .Any(session => session.CompletedOn == null);
+        }
+
+        public virtual void CompleteMigrationSession(MigrationSession migrationSession, MigrationVersion completedOnVersion, bool successful)
         {
             migrationSession.CompletedOn = DateTime.Now;
-            migrationSession.CompletedOnVersion = completedOnVersion ?? migrationSession.LastVersion;
+            migrationSession.CompletedOnVersion = successful ?
+                migrationSession.LastVersion
+                : completedOnVersion;
             migrationSession.CompletedSuccessfully = successful;
             GetMigrationSessions().ReplaceOne(x => x.StartedOn == migrationSession.StartedOn, migrationSession);
         }
 
-        public virtual MigrationSession StartMigrationSession(IEnumerable<Migration> migration)
+        public virtual MigrationSession StartMigrationSession(IEnumerable<Migration> migrations)
         {
-            MigrationSession migrationSession = new MigrationSession(migration);
+            MigrationSession migrationSession = new MigrationSession(migrations);
             GetMigrationSessions().InsertOne(migrationSession);
             return migrationSession;
         }
