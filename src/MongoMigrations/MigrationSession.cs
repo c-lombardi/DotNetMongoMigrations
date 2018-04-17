@@ -9,18 +9,20 @@ namespace MongoMigrations
     {
         public MigrationSession()
         {
-        }
-
-        public MigrationSession(IEnumerable<Migration> migrations)
-        {
-            FirstVersion = migrations.Min(migration => migration.Version);
-            LastVersion = migrations.Max(migration => migration.Version);
+            MigrationSessionId = Guid.NewGuid();
             StartedOn = DateTime.Now;
         }
 
+        public MigrationSession(IEnumerable<Migration> migrations) : base()
+        {
+            FirstVersion = migrations.Min(migration => migration.Version);
+            LastVersion = migrations.Max(migration => migration.Version);
+        }
 
-        //This should only be set here.
+
         [BsonId]
+        public Guid MigrationSessionId { get; set; }
+
         public MigrationVersion FirstVersion { get; set; }
 
         //This should only be set here.
