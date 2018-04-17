@@ -36,7 +36,7 @@ namespace MongoMigrations
                 migrationSession.LastVersion
                 : completedOnVersion;
             migrationSession.CompletedSuccessfully = successful;
-            GetMigrationSessions().ReplaceOne(x => x.StartedOn == migrationSession.StartedOn, migrationSession);
+            GetMigrationSessions().ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, migrationSession);
         }
 
         public virtual MigrationSession StartMigrationSession(IEnumerable<Migration> migrations)
