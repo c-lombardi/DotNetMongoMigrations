@@ -15,8 +15,16 @@ namespace MongoMigrations
 
         public MigrationSession(IEnumerable<Migration> migrations) : base()
         {
-            FirstVersion = migrations.Min(migration => migration.Version);
-            LastVersion = migrations.Max(migration => migration.Version);
+            if (migrations.Any())
+            {
+                FirstVersion = migrations.Min(migration => migration.Version);
+                LastVersion = migrations.Max(migration => migration.Version);
+            }
+            else
+            {
+                FirstVersion = MigrationVersion.Default();
+                LastVersion = MigrationVersion.Default();
+            }
         }
 
 
