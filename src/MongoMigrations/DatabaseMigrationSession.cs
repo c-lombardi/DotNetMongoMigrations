@@ -43,8 +43,8 @@ namespace MongoMigrations
             migrationSession.CompletedOn = DateTime.UtcNow;
             migrationSession.CompletedSuccessfully = false;
             migrationSession.CompletedOnVersion = migrationException.VersionFailedOn;
-            migrationSession.InnerException = migrationException.InnerException.InnerException.Message;
-            migrationSession.StackTrace = migrationException.InnerException.StackTrace;
+            migrationSession.InnerException = migrationException?.InnerException?.InnerException?.Message ?? string.Empty;
+            migrationSession.StackTrace = migrationException?.InnerException?.StackTrace ?? string.Empty;
             GetMigrationSessions().ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, migrationSession);
         }
 
