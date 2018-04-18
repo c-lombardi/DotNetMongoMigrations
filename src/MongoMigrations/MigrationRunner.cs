@@ -59,11 +59,11 @@ namespace MongoMigrations
             {
                 migrations.ToList()
                           .ForEach(ApplyMigration);
-                DatabaseSession.CompleteMigrationSession(migrationSession, null, true);
+                DatabaseSession.CompleteMigrationSession(migrationSession);
             }
             catch (MigrationException migrationException)
             {
-                DatabaseSession.CompleteMigrationSession(migrationSession, migrationException.VersionFailedOn, false);
+                DatabaseSession.FailMigrationSession(migrationSession, migrationException.VersionFailedOn);
                 throw migrationException;
             }
         }

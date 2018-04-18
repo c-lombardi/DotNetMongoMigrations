@@ -29,13 +29,19 @@ namespace MongoMigrations
                 .Any(session => session.CompletedOn == null);
         }
 
-        public virtual void CompleteMigrationSession(MigrationSession migrationSession, MigrationVersion completedOnVersion, bool successful)
+        public virtual void CompleteMigrationSession(MigrationSession migrationSession)
         {
             migrationSession.CompletedOn = DateTime.Now;
-            migrationSession.CompletedOnVersion = successful ?
-                migrationSession.LastVersion
-                : completedOnVersion;
-            migrationSession.CompletedSuccessfully = successful;
+            migrationSession.CompletedOnVersion = migrationSession.LastVersion;
+            migrationSession.CompletedSuccessfully = true;
+            GetMigrationSessions().ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, migrationSession);
+        }
+
+        public virtual void FailMigrationSession(MigrationSession migrationSession, MigrationVersion completedOnVersion)
+        {
+            migrationSession.CompletedOn = DateTime.Now;
+            migrationSession.CompletedOnVersion = completedOnVersion;
+            migrationSession.CompletedSuccessfully = false;
             GetMigrationSessions().ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, migrationSession);
         }
 
