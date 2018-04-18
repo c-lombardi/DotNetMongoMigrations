@@ -26,7 +26,8 @@ namespace MongoMigrations
             return GetMigrationSessions()
                 .Find(Builders<MigrationSession>.Filter.Empty)
                 .ToList()
-                .Any(session => session.CompletedOn == null);
+                .Any(session => session.CompletedOn == null
+                    && session.CompletedOnVersion == null);
         }
 
         public virtual void CompleteMigrationSession(MigrationSession migrationSession)
