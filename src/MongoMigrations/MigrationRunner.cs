@@ -89,6 +89,11 @@ namespace MongoMigrations
             }
         }
 
+        protected virtual void OnRollbackException(Migration migration, Exception exception)
+        {
+            throw new MigrationException(exception.Message, exception, migration.Version);
+        }
+
         protected virtual void OnMigrationException(Migration migration, Exception exception)
         {
             try
@@ -97,9 +102,9 @@ namespace MongoMigrations
                 DatabaseStatus.DeleteMigration(new AppliedMigration(migration));
                 throw new MigrationException(exception.Message, exception, migration.Version);
             }
-            catch (Exception ex)
+            catch (Exception rollbackEx)
             {
-                throw new MigrationException(ex.Message, exception, migration.Version);
+                OnRollbackException(migration, rollbackEx);
             }
         }
 
