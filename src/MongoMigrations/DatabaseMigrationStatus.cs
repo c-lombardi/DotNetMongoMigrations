@@ -63,7 +63,7 @@
 
         public virtual void CompleteMigration(AppliedMigration appliedMigration)
         {
-            appliedMigration.CompletedOn = DateTime.Now;
+            appliedMigration.CompletedOn = DateTime.UtcNow;
             GetMigrationsApplied().ReplaceOne(x => x.Version == appliedMigration.Version, appliedMigration);
         }
 

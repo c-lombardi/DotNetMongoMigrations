@@ -31,7 +31,7 @@ namespace MongoMigrations
 
         public virtual void CompleteMigrationSession(MigrationSession migrationSession)
         {
-            migrationSession.CompletedOn = DateTime.Now;
+            migrationSession.CompletedOn = DateTime.UtcNow;
             migrationSession.CompletedOnVersion = migrationSession.LastVersion;
             migrationSession.CompletedSuccessfully = true;
             GetMigrationSessions().ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, migrationSession);
@@ -39,7 +39,7 @@ namespace MongoMigrations
 
         public virtual void FailMigrationSession(MigrationSession migrationSession, MigrationVersion completedOnVersion)
         {
-            migrationSession.CompletedOn = DateTime.Now;
+            migrationSession.CompletedOn = DateTime.UtcNow;
             migrationSession.CompletedOnVersion = completedOnVersion;
             migrationSession.CompletedSuccessfully = false;
             GetMigrationSessions().ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, migrationSession);

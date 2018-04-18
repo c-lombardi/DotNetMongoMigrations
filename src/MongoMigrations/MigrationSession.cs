@@ -10,10 +10,10 @@ namespace MongoMigrations
         public MigrationSession()
         {
             MigrationSessionId = Guid.NewGuid();
-            StartedOn = DateTime.Now;
+            StartedOn = DateTime.UtcNow;
         }
 
-        public MigrationSession(IEnumerable<Migration> migrations) : base()
+        public MigrationSession(IEnumerable<Migration> migrations) : this()
         {
             if (migrations.Any())
             {

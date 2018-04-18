@@ -14,7 +14,7 @@ namespace MongoMigrations
         public AppliedMigration(Migration migration)
         {
             Version = migration.Version;
-            StartedOn = DateTime.Now;
+            StartedOn = DateTime.UtcNow;
             Description = migration.Description;
         }
 
@@ -35,8 +35,8 @@ namespace MongoMigrations
             {
                 Version = version,
                 Description = ManuallyMarked,
-                StartedOn = DateTime.Now,
-                CompletedOn = DateTime.Now
+                StartedOn = DateTime.UtcNow,
+                CompletedOn = DateTime.UtcNow
             };
         }
     }
