@@ -41,6 +41,8 @@ namespace MongoMigrations
         public MigrationVersion CompletedOnVersion { get; set; }
         public DateTime? CompletedOn { get; set; }
         public bool CompletedSuccessfully { get; set; }
+        public string InnerException { get; set; }
+        public string StackTrace { get; set; }
 
         public override string ToString()
         {

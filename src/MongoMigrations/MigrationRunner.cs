@@ -63,7 +63,7 @@ namespace MongoMigrations
             }
             catch (MigrationException migrationException)
             {
-                DatabaseSession.FailMigrationSession(migrationSession, migrationException.VersionFailedOn);
+                DatabaseSession.FailMigrationSession(migrationSession, migrationException);
                 throw migrationException;
             }
         }

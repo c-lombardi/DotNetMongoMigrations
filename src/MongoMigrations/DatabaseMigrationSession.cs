@@ -33,16 +33,18 @@ namespace MongoMigrations
         public virtual void CompleteMigrationSession(MigrationSession migrationSession)
         {
             migrationSession.CompletedOn = DateTime.UtcNow;
-            migrationSession.CompletedOnVersion = migrationSession.LastVersion;
             migrationSession.CompletedSuccessfully = true;
+            migrationSession.CompletedOnVersion = migrationSession.LastVersion;
             GetMigrationSessions().ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, migrationSession);
         }
 
-        public virtual void FailMigrationSession(MigrationSession migrationSession, MigrationVersion completedOnVersion)
+        public virtual void FailMigrationSession(MigrationSession migrationSession, MigrationException migrationException)
         {
             migrationSession.CompletedOn = DateTime.UtcNow;
-            migrationSession.CompletedOnVersion = completedOnVersion;
             migrationSession.CompletedSuccessfully = false;
+            migrationSession.CompletedOnVersion = migrationException.VersionFailedOn;
+            migrationSession.InnerException = migrationException.InnerException.Message;
+            migrationSession.StackTrace = migrationException.StackTrace;
             GetMigrationSessions().ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, migrationSession);
         }
 
