@@ -87,18 +87,25 @@ namespace MongoMigrations
 
         protected virtual void OnMigrationException(Migration migration, Exception exception)
         {
-            var message = new
+            try
             {
-                Message = "Migration failed to be applied: " + exception.Message,
-                migration.Version,
-                Name = migration.GetType(),
-                migration.Description,
-                DatabaseName = Database.DatabaseNamespace.DatabaseName
-            };
-            Console.WriteLine(message);
-            migration.Rollback();
-            DatabaseStatus.DeleteMigration(new AppliedMigration(migration));
-            throw new MigrationException(message.ToString(), exception, migration.Version);
+                var message = new
+                {
+                    Message = "Migration failed to be applied: " + exception.Message,
+                    migration.Version,
+                    Name = migration.GetType(),
+                    migration.Description,
+                    DatabaseName = Database.DatabaseNamespace.DatabaseName
+                };
+                Console.WriteLine(message);
+                migration.Rollback();
+                DatabaseStatus.DeleteMigration(new AppliedMigration(migration));
+                throw new MigrationException(message.ToString(), exception, migration.Version);
+            }
+            catch (Exception ex)
+            {
+                throw new MigrationException(ex.Message.ToString(), exception, migration.Version);
+            }
         }
 
         public virtual void UpdateTo(MigrationVersion updateToVersion)
