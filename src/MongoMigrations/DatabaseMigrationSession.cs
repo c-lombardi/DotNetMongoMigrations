@@ -27,7 +27,7 @@ namespace MongoMigrations
                 .Find(Builders<MigrationSession>.Filter.Empty)
                 .ToList()
                 .Any(session => session.CompletedOn == null
-                    && session.CompletedOnVersion == null);
+                    && session.CompletedOnVersion == MigrationVersion.Default());
         }
 
         public virtual void CompleteMigrationSession(MigrationSession migrationSession)
@@ -48,11 +48,19 @@ namespace MongoMigrations
             GetMigrationSessions().ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, migrationSession);
         }
 
-        public virtual MigrationSession StartMigrationSession(IEnumerable<Migration> migrations)
+        public virtual bool TryStartMigrationSession(IEnumerable<Migration> migrations, out MigrationSession migrationSession)
         {
-            MigrationSession migrationSession = new MigrationSession(migrations);
-            GetMigrationSessions().InsertOne(migrationSession);
-            return migrationSession;
+            if (MigrationSessionIsExecuting())
+            {
+                migrationSession = null;
+                return false;
+            }
+            else
+            {
+                migrationSession = new MigrationSession(migrations);
+                GetMigrationSessions().InsertOne(migrationSession);
+                return true;
+            }
         }
     }
 }

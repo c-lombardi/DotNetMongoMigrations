@@ -54,17 +54,21 @@ namespace MongoMigrations
 
         protected virtual void ApplyMigrations(IEnumerable<Migration> migrations)
         {
-            MigrationSession migrationSession = DatabaseSession.StartMigrationSession(migrations);
-            try
+            if (DatabaseSession.TryStartMigrationSession(migrations, out MigrationSession migrationSession))
             {
-                migrations.ToList()
-                          .ForEach(ApplyMigration);
-                DatabaseSession.CompleteMigrationSession(migrationSession);
-            }
-            catch (MigrationException migrationException)
-            {
-                DatabaseSession.FailMigrationSession(migrationSession, migrationException);
-                throw migrationException;
+                try
+                {
+                    foreach (Migration migration in migrations)
+                    {
+                        ApplyMigration(migration);
+                    }
+                    DatabaseSession.CompleteMigrationSession(migrationSession);
+                }
+                catch (MigrationException migrationException)
+                {
+                    DatabaseSession.FailMigrationSession(migrationSession, migrationException);
+                    throw migrationException;
+                }
             }
         }
 
@@ -89,22 +93,13 @@ namespace MongoMigrations
         {
             try
             {
-                var message = new
-                {
-                    Message = "Migration failed to be applied: " + exception.Message,
-                    migration.Version,
-                    Name = migration.GetType(),
-                    migration.Description,
-                    DatabaseName = Database.DatabaseNamespace.DatabaseName
-                };
-                Console.WriteLine(message);
                 migration.Rollback();
                 DatabaseStatus.DeleteMigration(new AppliedMigration(migration));
-                throw new MigrationException(message.ToString(), exception, migration.Version);
+                throw new MigrationException(exception.Message, exception, migration.Version);
             }
             catch (Exception ex)
             {
-                throw new MigrationException(ex.Message.ToString(), exception, migration.Version);
+                throw new MigrationException(ex.Message, exception, migration.Version);
             }
         }
 
