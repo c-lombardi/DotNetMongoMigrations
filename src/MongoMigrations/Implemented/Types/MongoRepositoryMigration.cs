@@ -4,7 +4,7 @@ using System;
 
 namespace MongoMigrations.Implemented.Types
 {
-    public sealed class MongoRepositoryMigration
+    public class MongoRepositoryMigration
     {
         [BsonId]
         public MigrationVersion Version { get; set; }
