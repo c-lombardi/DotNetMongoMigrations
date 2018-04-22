@@ -13,7 +13,7 @@ namespace MongoMigrations.Implemented.Types
         public MigrationVersion Version { get; set; }
         public DateTime? CompletedOn { get; set; }
 
-        public MongoRepositoryMigration() { }
+        public MongoRepositoryMigration() { } 
 
         public MongoRepositoryMigration(RepositoryMigration repositoryMigration) : this()
         {
