@@ -4,6 +4,7 @@ using Migrations.ToBeImplemented;
 using Migrations.Types;
 using System.Collections.Generic;
 using MongoMigrations.Implemented.Types;
+using MongoDB.Bson;
 
 namespace MongoMigrations.Implemented
 {
@@ -22,6 +23,29 @@ namespace MongoMigrations.Implemented
             MongoDatabase = mongoDatabase;
             VersionCollectionName = versionCollectionName;
             SessionCollectionName = sessionCollectionName;
+
+            if (!CollectionExists(mongoDatabase, sessionCollectionName))
+            {
+                mongoDatabase.CreateCollection(sessionCollectionName);
+            }
+
+            if (!CollectionExists(mongoDatabase, versionCollectionName))
+            {
+                mongoDatabase.CreateCollection(versionCollectionName);
+            }
+        }
+
+        private static bool CollectionExists(IMongoDatabase mongoDatabase, string collectionName)
+        {
+            BsonDocument filter = new BsonDocument("name", collectionName);
+            //filter by collection name
+            IAsyncCursor<BsonDocument> collections = mongoDatabase.ListCollections(
+                new ListCollectionsOptions
+                {
+                    Filter = filter
+                });
+            //check for existence
+            return collections.Any();
         }
 
         public virtual IEnumerable<MigrationSession> GetMigrationSessions()
