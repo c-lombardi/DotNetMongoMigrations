@@ -26,9 +26,22 @@ namespace MongoMigrations.Implemented
 
         public virtual IEnumerable<MigrationSession> GetMigrationSessions()
         {
-            return MongoDatabase.GetCollection<MigrationSession>(SessionCollectionName)
-                .Find(Builders<MigrationSession>.Filter.Empty)
-                .ToList();
+            return MongoDatabase.GetCollection<MongoMigrationSession>(SessionCollectionName)
+                .Find(Builders<MongoMigrationSession>.Filter.Empty)
+                .ToList()
+                .Select(mongoMigrationSession =>
+                    new MigrationSession()
+                    {
+                        StartedOn = mongoMigrationSession.StartedOn,
+                        CompletedOn = mongoMigrationSession.CompletedOn,
+                        CompletedOnVersion = mongoMigrationSession.CompletedOnVersion,
+                        CompletedSuccessfully = mongoMigrationSession.CompletedSuccessfully,
+                        FirstVersion = mongoMigrationSession.FirstVersion,
+                        InnerException = mongoMigrationSession.InnerException,
+                        LastVersion = mongoMigrationSession.LastVersion,
+                        MigrationSessionId = mongoMigrationSession.MigrationSessionId,
+                        StackTrace = mongoMigrationSession.StackTrace
+                    });
         }
 
         public virtual IEnumerable<RepositoryMigration> GetMigrations()
@@ -48,7 +61,7 @@ namespace MongoMigrations.Implemented
 
         public virtual void AddMigrationSession(MigrationSession migrationSession)
         {
-            MongoDatabase.GetCollection<MigrationSession>(SessionCollectionName).InsertOne(migrationSession);
+            MongoDatabase.GetCollection<MongoMigrationSession>(SessionCollectionName).InsertOne(new MongoMigrationSession(migrationSession));
         }
 
         public virtual void AddMigration(RepositoryMigration repositoryMigration)
@@ -58,7 +71,7 @@ namespace MongoMigrations.Implemented
 
         public virtual void UpsertMigrationSession(MigrationSession migrationSession)
         {
-            MongoDatabase.GetCollection<MigrationSession>(VersionCollectionName).ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, migrationSession);
+            MongoDatabase.GetCollection<MongoMigrationSession>(VersionCollectionName).ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, new MongoMigrationSession(migrationSession));
         }
 
         public virtual void UpsertMigration(RepositoryMigration repositoryMigration)
