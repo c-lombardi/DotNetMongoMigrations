@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using Migrations.ToBeImplemented;
 using Migrations.Types;
 using System.Collections.Generic;
+using MongoMigrations.Implemented.Types;
 
 namespace MongoMigrations.Implemented
 {
@@ -32,9 +33,17 @@ namespace MongoMigrations.Implemented
 
         public virtual IEnumerable<RepositoryMigration> GetMigrations()
         {
-            return MongoDatabase.GetCollection<RepositoryMigration>(VersionCollectionName)
-                .Find(Builders<RepositoryMigration>.Filter.Empty)
-                .ToList();
+            return MongoDatabase.GetCollection<MongoRepositoryMigration>(VersionCollectionName)
+                .Find(Builders<MongoRepositoryMigration>.Filter.Empty)
+                .ToList()
+                .Select(mongoRepositoryMigration =>
+                    new RepositoryMigration(null)
+                    {
+                        Description = mongoRepositoryMigration.Description,
+                        StartedOn = mongoRepositoryMigration.StartedOn,
+                        CompletedOn = mongoRepositoryMigration.CompletedOn,
+                        Version = mongoRepositoryMigration.Version
+                    });
         }
 
         public virtual void AddMigrationSession(MigrationSession migrationSession)
@@ -42,9 +51,9 @@ namespace MongoMigrations.Implemented
             MongoDatabase.GetCollection<MigrationSession>(SessionCollectionName).InsertOne(migrationSession);
         }
 
-        public virtual void AddMigration(RepositoryMigration migration)
+        public virtual void AddMigration(RepositoryMigration repositoryMigration)
         {
-            MongoDatabase.GetCollection<RepositoryMigration>(VersionCollectionName).InsertOne(migration);
+            MongoDatabase.GetCollection<MongoRepositoryMigration>(VersionCollectionName).InsertOne(new MongoRepositoryMigration(repositoryMigration));
         }
 
         public virtual void UpsertMigrationSession(MigrationSession migrationSession)
@@ -52,14 +61,14 @@ namespace MongoMigrations.Implemented
             MongoDatabase.GetCollection<MigrationSession>(VersionCollectionName).ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, migrationSession);
         }
 
-        public virtual void UpsertMigration(RepositoryMigration migration)
+        public virtual void UpsertMigration(RepositoryMigration repositoryMigration)
         {
-            MongoDatabase.GetCollection<RepositoryMigration>(VersionCollectionName).ReplaceOne(x => x.Version == migration.Version, migration);
+            MongoDatabase.GetCollection<MongoRepositoryMigration>(VersionCollectionName).ReplaceOne(x => x.Version == repositoryMigration.Version, new MongoRepositoryMigration(repositoryMigration));
         }
 
-        public virtual void DeleteMigration(RepositoryMigration migration)
+        public virtual void DeleteMigration(RepositoryMigration repositoryMigration)
         {
-            MongoDatabase.GetCollection<RepositoryMigration>(VersionCollectionName).DeleteOne(x => x.Version == migration.Version);
+            MongoDatabase.GetCollection<MongoRepositoryMigration>(VersionCollectionName).DeleteOne(x => x.Version == repositoryMigration.Version);
         }
     }
 }
