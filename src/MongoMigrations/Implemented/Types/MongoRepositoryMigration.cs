@@ -13,7 +13,12 @@ namespace MongoMigrations.Implemented.Types
         public MigrationVersion Version { get; set; }
         public DateTime? CompletedOn { get; set; }
 
-        public MongoRepositoryMigration(RepositoryMigration repositoryMigration)
+        public MongoRepositoryMigration()
+        {
+            MongoRepositoryMigrationId = Guid.NewGuid();
+        }
+
+        public MongoRepositoryMigration(RepositoryMigration repositoryMigration) : this()
         {
             Description = repositoryMigration.Description;
             StartedOn = repositoryMigration.StartedOn;
