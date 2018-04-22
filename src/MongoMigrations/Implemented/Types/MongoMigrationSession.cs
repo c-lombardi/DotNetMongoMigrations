@@ -1,10 +1,12 @@
 ﻿using Migrations.Types;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 
 namespace MongoMigrations.Implemented.Types
 {
     public class MongoMigrationSession
     {
+        [BsonId]
         public Guid MigrationSessionId { get; set; }
         public MigrationVersion FirstVersion { get; set; }
         public MigrationVersion LastVersion { get; set; }
@@ -14,6 +16,8 @@ namespace MongoMigrations.Implemented.Types
         public bool CompletedSuccessfully { get; set; }
         public string InnerException { get; set; }
         public string StackTrace { get; set; }
+
+        public MongoMigrationSession() { }
 
         public MongoMigrationSession(MigrationSession migrationSession)
         {
