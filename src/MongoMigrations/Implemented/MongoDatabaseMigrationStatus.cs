@@ -8,7 +8,7 @@ namespace MongoMigrations.Implemented
 {
     public class MongoDatabaseMigrationStatus : IRepository
     {
-        private readonly IMongoDatabase MongoDatabase;
+        public readonly IMongoDatabase MongoDatabase;
 
         public readonly string VersionCollectionName;
         public readonly string SessionCollectionName;
