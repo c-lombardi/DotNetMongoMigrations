@@ -2,6 +2,9 @@ using Migrations.Types;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MongoMigrations.Implemented;
+using System.Collections.Generic;
+using System.Reflection;
+
 namespace MongoMigrations
 {
     public static class MigrationRunner
@@ -14,10 +17,10 @@ namespace MongoMigrations
             BsonSerializer.RegisterSerializer(typeof(MigrationVersion), new MigrationVersionSerializer());
         }
 
-        public static void UpdateToLatest(string mongoServerLocation, string databaseName)
+        public static void UpdateToLatest(string mongoServerLocation, string databaseName, IEnumerable<Assembly> assemblies)
         {
             Migrations.MigrationRunner.UpdateToLatest(
-                new MigrationLocator(),
+                new MigrationLocator(assemblies),
                 new MongoDatabaseMigrationStatus(
                     new MongoClient(mongoServerLocation).GetDatabase(databaseName),
                     VersionCollectionName,

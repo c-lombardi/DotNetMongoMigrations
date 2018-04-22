@@ -11,27 +11,13 @@ namespace MongoMigrations.Implemented
 {
     public class MigrationLocator : IMigrationLocator
     {
-        protected readonly List<Assembly> Assemblies = new List<Assembly>();
+        protected readonly IEnumerable<Assembly> Assemblies;
         public List<MigrationFilter> MigrationFilters = new List<MigrationFilter>();
 
-        public MigrationLocator()
+        public MigrationLocator(IEnumerable<Assembly> assemblies)
         {
             MigrationFilters.Add(new ExcludeExperimentalMigrations());
-        }
-
-        public virtual void LookForMigrationsInAssemblyOfType<T>()
-        {
-            var assembly = typeof(T).Assembly;
-            LookForMigrationsInAssembly(assembly);
-        }
-
-        public void LookForMigrationsInAssembly(Assembly assembly)
-        {
-            if (Assemblies.Contains(assembly))
-            {
-                return;
-            }
-            Assemblies.Add(assembly);
+            Assemblies = assemblies;
         }
 
         protected virtual IEnumerable<Migration> GetMigrationsFromAssembly(Assembly assembly)
