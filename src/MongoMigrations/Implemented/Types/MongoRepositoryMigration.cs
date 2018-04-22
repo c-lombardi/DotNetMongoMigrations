@@ -7,10 +7,9 @@ namespace MongoMigrations.Implemented.Types
     public sealed class MongoRepositoryMigration
     {
         [BsonId]
-        public Guid MongoRepositoryMigrationId { get; set; }
+        public MigrationVersion Version { get; set; }
         public string Description { get; set; }
         public DateTime StartedOn { get; set; }
-        public MigrationVersion Version { get; set; }
         public DateTime? CompletedOn { get; set; }
 
         public MongoRepositoryMigration() { } 
@@ -21,7 +20,6 @@ namespace MongoMigrations.Implemented.Types
             StartedOn = repositoryMigration.StartedOn;
             Version = repositoryMigration.Version;
             CompletedOn = repositoryMigration.CompletedOn;
-            MongoRepositoryMigrationId = Guid.NewGuid();
         }
     }
 }
