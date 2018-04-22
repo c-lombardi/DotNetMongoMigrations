@@ -95,7 +95,7 @@ namespace MongoMigrations.Implemented
 
         public virtual void UpsertMigrationSession(MigrationSession migrationSession)
         {
-            MongoDatabase.GetCollection<MongoMigrationSession>(VersionCollectionName).ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, new MongoMigrationSession(migrationSession));
+            MongoDatabase.GetCollection<MongoMigrationSession>(SessionCollectionName).ReplaceOne(x => x.MigrationSessionId == migrationSession.MigrationSessionId, new MongoMigrationSession(migrationSession));
         }
 
         public virtual void UpsertMigration(RepositoryMigration repositoryMigration)
