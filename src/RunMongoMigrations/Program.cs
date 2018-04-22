@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Reflection;
 using MongoMigrations;
+using Migrations.Types;
 
 namespace RunMongoMigrations
 {
@@ -17,14 +17,10 @@ namespace RunMongoMigrations
             var server = args[0];
             var database = args[1];
             var migrationsAssembly = args[2];
-
-            var runner = new MigrationRunner(("mongodb://" + server), database);
-
-            runner.MigrationLocator.LookForMigrationsInAssembly(Assembly.LoadFrom(migrationsAssembly));
-
+            
             try
             {
-                runner.UpdateToLatest();
+                MigrationRunner.UpdateToLatest(("mongodb://" + server), database);
                 return 0;
             }
             catch (MigrationException e)
