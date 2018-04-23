@@ -37,7 +37,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Migrations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Migrations.1.0.9\lib\net452\Migrations.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Migrations.1.0.11\lib\net452\Migrations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MongoDB.Bson, Version=2.3.0.157, Culture=neutral, processorArchitecture=MSIL">
@@ -64,7 +65,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BsonDocumentExtensions.cs" />
     <Compile Include="Implemented\MongoDatabaseMigrationStatus.cs" />
     <Compile Include="Implemented\Filter\Experimental\ExcludeExperimentalMigrations.cs" />
     <Compile Include="Implemented\Filter\Experimental\ExperimentalMigration.cs" />
