@@ -38,7 +38,7 @@
   <ItemGroup>
     <Reference Include="Migrations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Migrations.1.0.13\lib\net452\Migrations.dll</HintPath>
+      <HintPath>..\packages\Migrations.1.0.14\lib\net452\Migrations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MongoDB.Bson, Version=2.3.0.157, Culture=neutral, processorArchitecture=MSIL">
