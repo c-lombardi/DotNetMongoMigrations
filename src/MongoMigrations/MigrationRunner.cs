@@ -1,3 +1,4 @@
+using Migrations.ToBeImplemented;
 using Migrations.Types;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
@@ -17,7 +18,25 @@ namespace MongoMigrations
             BsonSerializer.RegisterSerializer(typeof(MigrationVersion), new MigrationVersionSerializer());
         }
 
-        public static void UpdateToLatest(string mongoServerLocation, string databaseName, IEnumerable<Assembly> assemblies)
+        public static void UpdateToLatest(
+            string mongoServerLocation,
+            string databaseName,
+            IEnumerable<Assembly> assemblies,
+            IRepositoryToMigrate repositoryToMigrate)
+        {
+            Migrations.MigrationRunner.UpdateToLatest(
+                new MigrationLocator(assemblies),
+                new MongoDatabaseMigrationStatus(
+                    new MongoClient(mongoServerLocation).GetDatabase(databaseName),
+                    VersionCollectionName,
+                    SessionCollectionName),
+                repositoryToMigrate);
+        }
+
+        public static void UpdateToLatest(
+            string mongoServerLocation,
+            string databaseName,
+            IEnumerable<Assembly> assemblies)
         {
             Migrations.MigrationRunner.UpdateToLatest(
                 new MigrationLocator(assemblies),

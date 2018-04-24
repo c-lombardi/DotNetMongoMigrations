@@ -1,5 +1,6 @@
 ﻿using Migrations.ToBeImplemented;
 using Migrations.Types;
+using Migrations.Types.ToBeImplemented;
 using MongoMigrations.Implemented.Filter;
 using MongoMigrations.Implemented.Filter.Experimental;
 using System;
