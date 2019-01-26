@@ -45,5 +45,18 @@ namespace MongoMigrations
                     VersionCollectionName,
                     SessionCollectionName));
         }
+
+        public static void UpdateToLatest(
+            string mongoConnectionString,
+            IEnumerable<Assembly> assemblies)
+        {
+            Migrations.MigrationRunner.UpdateToLatest(
+                new MigrationLocator(assemblies),
+                new MongoDatabaseMigrationStatus(
+                    new MongoClient(mongoConnectionString)
+                        .GetDatabase(MongoUrl.Create(mongoConnectionString).DatabaseName),
+                    VersionCollectionName,
+                    SessionCollectionName));
+        }
     }
 }
