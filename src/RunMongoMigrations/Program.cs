@@ -22,7 +22,7 @@ namespace RunMongoMigrations
             
             try
             {
-                MigrationRunner.UpdateToLatest(("mongodb://" + server), database, new List<Assembly> { Assembly.GetExecutingAssembly() });
+                MigrationRunner.UpdateToLatest("mongodb://" + server + "/" + database, new List<Assembly> { Assembly.GetExecutingAssembly() });
                 return 0;
             }
             catch (MigrationException e)
