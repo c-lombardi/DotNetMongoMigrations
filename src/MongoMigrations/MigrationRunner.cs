@@ -48,7 +48,8 @@ namespace MongoMigrations
 
         public static void UpdateToLatest(
             string mongoConnectionString,
-            IEnumerable<Assembly> assemblies)
+            IEnumerable<Assembly> assemblies,
+            IRepositoryToMigrate repositoryToMigrate)
         {
             Migrations.MigrationRunner.UpdateToLatest(
                 new MigrationLocator(assemblies),
@@ -56,7 +57,8 @@ namespace MongoMigrations
                     new MongoClient(mongoConnectionString)
                         .GetDatabase(MongoUrl.Create(mongoConnectionString).DatabaseName),
                     VersionCollectionName,
-                    SessionCollectionName));
+                    SessionCollectionName),
+                repositoryToMigrate);
         }
     }
 }
