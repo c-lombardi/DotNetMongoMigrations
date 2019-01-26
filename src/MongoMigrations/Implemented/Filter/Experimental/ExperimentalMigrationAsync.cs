@@ -6,7 +6,7 @@ namespace MongoMigrations.Implemented.Filter.Experimental
         AttributeTargets.Class, 
         AllowMultiple = false, 
         Inherited = true)]
-    public class ExperimentalAttributeAsync : Attribute
+    public class ExperimentalAttribute : Attribute
     {
     }
 }

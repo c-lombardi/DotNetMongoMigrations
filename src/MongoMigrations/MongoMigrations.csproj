@@ -37,9 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Migrations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Migrations.1.0.14\lib\net452\Migrations.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Migrations.1.0.15\lib\net452\Migrations.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB.Bson, Version=2.3.0.157, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MongoDB.Bson.2.3.0\lib\net45\MongoDB.Bson.dll</HintPath>
@@ -65,13 +63,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Implemented\Filter\Experimental\ExcludeExperimentalMigrationsAsync.cs" />
+    <Compile Include="Implemented\Filter\Experimental\ExperimentalMigrationAsync.cs" />
+    <Compile Include="Implemented\Filter\MigrationFilterAsync.cs" />
+    <Compile Include="Implemented\MigrationLocatorAsync.cs" />
+    <Compile Include="Implemented\MongoDatabaseMigrationStatusAsync.cs" />
     <Compile Include="Implemented\MongoDatabaseMigrationStatus.cs" />
     <Compile Include="Implemented\Filter\Experimental\ExcludeExperimentalMigrations.cs" />
     <Compile Include="Implemented\Filter\Experimental\ExperimentalMigration.cs" />
     <Compile Include="Implemented\Filter\MigrationFilter.cs" />
     <Compile Include="Implemented\MigrationLocator.cs" />
+    <Compile Include="Implemented\Types\MongoMigrationSessionAsync.cs" />
     <Compile Include="Implemented\Types\MongoMigrationSession.cs" />
+    <Compile Include="Implemented\Types\MongoRepositoryMigrationAsync.cs" />
     <Compile Include="Implemented\Types\MongoRepositoryMigration.cs" />
+    <Compile Include="MigrationRunnerAsync.cs" />
     <Compile Include="MigrationRunner.cs" />
     <Compile Include="MigrationVersionSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
